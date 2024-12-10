@@ -13,7 +13,7 @@ const Chat = sequelize.define('Chat', {
   },
   data: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    defaultValue: DataTypes.NOW,//Concerta a data, pois salva na fuso zero
   },
   usuario_id: {
     type: DataTypes.INTEGER,

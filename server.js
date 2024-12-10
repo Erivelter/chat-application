@@ -1,18 +1,18 @@
 const WebSocket = require('ws');
-const express = require('express')
-const path = require('path')
+const express = require('express');
+const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const Usuario = require('./models/Usuario');
+const Chat = require('./models/Chat');
 
 require('./db');
 require('dotenv').config();
 
 const app = express();
-const server = require('http').createServer(app)
+const server = require('http').createServer(app);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/users', userRoutes);
 
 const wss = new WebSocket.Server({ port: 8080 });
@@ -20,30 +20,44 @@ const wss = new WebSocket.Server({ port: 8080 });
 let sockets = []; // Lista de clientes conectados
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 wss.on('connection', function(socket) {
-    console.log("Cliente conectado");
-    sockets.push(socket);
+  console.log("Cliente conectado");
+  sockets.push(socket);
 
-    wss.on('connection', function(socket) {
-        socket.on('message', function(msg) {
-            console.log('Mensagem recebida do cliente:', msg);
-            
-            wss.clients.forEach(function(client) {
-                if (client !== socket && client.readyState === WebSocket.OPEN) {
-                    client.send(msg); // Envia para todos os clientes, exceto o que enviou
-                }
-            });
+  socket.on('message', async function(msg) {
+    try {
+        console.log('Mensagem recebida do cliente:', msg);
+        const message = JSON.parse(msg.toString('utf-8'));
+        const sala_id=1 //define a sala um como padrão
+        const { conteudo, usuario_id} = message;
+        console.log(conteudo, usuario_id)
+
+        // Salvar a mensagem no DB usando Sequelize
+        await Chat.create({
+            conteudo: conteudo,     
+            usuario_id: usuario_id, 
+            sala_id:sala_id
         });
-    });
-
-    wss.on('close', function() {
-        console.log("Cliente desconectado");
-        sockets = sockets.filter(s => s !== socket);
-    });
+        
+        wss.clients.forEach(function(client) {
+            if (client !== socket && client.readyState === WebSocket.OPEN) {
+                client.send(msg); // Envia para todos os outros clientes, exceto o que enviou
+            }
+        });
+    } catch (err) {
+        console.error('Erro ao processar a mensagem:', err);
+    }
 });
 
+
+  // desconexão do cliente
+  socket.on('close', function() {
+    console.log("Cliente desconectado");
+    sockets = sockets.filter(s => s !== socket);
+  });
+});
 
 module.exports = { app, server };

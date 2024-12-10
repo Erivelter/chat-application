@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat WebSocket</title>
     <style>
+        body{
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            flex-direction: column;
+        }
         #messages {
             list-style-type: none;
             padding: 0;
@@ -31,9 +38,10 @@
         
         // Quando a conexão for aberta
         socket.onopen = function() {
-            console.log('Conectado ao servidor WebSocket');
-            socket.send('Olá, servidor!');
-        };
+    console.log('Conectado ao servidor WebSocket');
+
+};
+
         
         // Quando uma mensagem for recebida
         socket.onmessage = function(event) {
@@ -51,28 +59,35 @@
 
         // Função para enviar uma mensagem
         function sendMessage() {
-            const inputMessage = document.getElementById('inputMessage');
-            const message = inputMessage.value;
-            
-            if (socket.readyState === WebSocket.OPEN) { // Verifica se o WebSocket está aberto
-                // Exibe a própria mensagem antes de enviar
-                const messagesList = document.getElementById('messages');
-                const newMessage = document.createElement('li');
-                newMessage.textContent = 'Você: ' + message;
-                messagesList.appendChild(newMessage);
-                
-                // Envia a mensagem ao servidor
-                socket.send(message);
-                
-                // Limpa o campo de entrada
-                inputMessage.value = '';
-                
-                // Rolagem automática para a última mensagem
-                messagesList.scrollTop = messagesList.scrollHeight;
-            } else {
-                console.log('WebSocket não está aberto!');
-            }
-        }
+    const inputMessage = document.getElementById('inputMessage');
+    const message = inputMessage.value;
+
+    if (socket.readyState === WebSocket.OPEN) {
+        // Exibe a própria mensagem antes de enviar
+        const messagesList = document.getElementById('messages');
+        const newMessage = document.createElement('li');
+        newMessage.textContent = 'Você: ' + message;
+        messagesList.appendChild(newMessage);
+
+        // Criar objeto de mensagem
+        const messageData = {
+            conteudo: message,
+            usuario_id: 1 // Por exemplo, substitua pelo ID do usuário real
+        };
+
+        // Envia a mensagem ao servidor (agora como objeto)
+        socket.send(JSON.stringify(messageData));
+
+        // Limpa o campo de entrada
+        inputMessage.value = '';
+
+        // Rolagem automática para a última mensagem
+        messagesList.scrollTop = messagesList.scrollHeight;
+    } else {
+        console.log('WebSocket não está aberto!');
+    }
+}
+
         
         // Quando a conexão for fechada
         socket.onclose = function() {
