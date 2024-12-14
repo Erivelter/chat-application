@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 
-router.get('/login', async (req,res) => {
+router.post('/login', async (req,res) => {
     const dados_user_recebido={
         username:req.body.username,
         password: req.body.password

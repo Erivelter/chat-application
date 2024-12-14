@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h1>Cadastro de Usuário</h1>
+    
+    <form id="registerForm">
+        <label for="username">Nome de usuário:</label>
+        <input type="text" id="username" name="username" placeholder="Digite o nome de usuário" required />
+        
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" placeholder="Digite a senha" required />
+        
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const dados_user = {
+                username: username,
+                password: password
+            };
+            fetch('http://localhost:5000/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dados_user),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message); 
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao registrar usuário:', error);
+                alert('Erro ao registrar usuário!');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -31,9 +31,19 @@ wss.on('connection', function(socket) {
     try {
         console.log('Mensagem recebida do cliente:', msg);
         const message = JSON.parse(msg.toString('utf-8'));
+        const username = message.username || 'Desconhecido'; 
+        const conteudo = message.conteudo;
         const sala_id=1 //define a sala um como padrão
-        const { conteudo, usuario_id} = message;
-        console.log(conteudo, usuario_id)
+      
+
+        const usuario = await Usuario.findOne({ where: { nome: username } });
+        if (!usuario) {
+            console.error('Usuário não encontrado:', username);
+            return; 
+        }
+
+        const usuario_id = usuario.id; 
+        console.log(`Mensagem de ${username} (ID: ${usuario_id}): ${conteudo}`);
 
         // Salvar a mensagem no DB usando Sequelize
         await Chat.create({
@@ -44,7 +54,7 @@ wss.on('connection', function(socket) {
         
         wss.clients.forEach(function(client) {
             if (client !== socket && client.readyState === WebSocket.OPEN) {
-                client.send(msg); // Envia para todos os outros clientes, exceto o que enviou
+              client.send(JSON.stringify({ username: username, conteudo: conteudo })); // Envia para todos os outros clientes, exceto o que enviou
             }
         });
     } catch (err) {
