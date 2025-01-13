@@ -1,10 +1,12 @@
 const WebSocket = require('ws');
 const express = require('express');
 const path = require('path');
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/UserRoutes');
 const Usuario = require('./models/Usuario');
 const Chat = require('./models/Chat');
+const Sala = require('./models/Salas');
 const http = require('http');
+const cors = require('cors');
 
 require('./db');
 require('dotenv').config();
@@ -12,9 +14,14 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
+app.use(cors({
+  origin: 'http://localhost:4200', // Permite apenas o frontend Angular acessar
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'] // Cabeçalhos permitidos
+}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/users', userRoutes);
+app.use('/', userRoutes);
 
 const wss = new WebSocket.Server({ server });
 
@@ -70,7 +77,12 @@ const usuario = await Usuario.findOne({ where: { nome: currentUser } });
 if (!usuario) {
   throw new Error('Usuário não encontrado');
 }
+const id = 1;
+const sala = await Sala.findByPk(id);
 
+if (!sala) {
+  throw new Error(`Sala com id ${id} não encontrada`);
+}
 // Use o ID numérico do usuário para criar a mensagem no chat
 await Chat.create({
   conteudo: content,
