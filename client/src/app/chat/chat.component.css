@@ -1,0 +1,58 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Ocupa toda a altura da tela */
+  background-color: #1c1c1c; /* Fundo escuro */
+  color: #fff;
+  padding: 20px;
+}
+
+.welcome-message {
+  font-size: 1.8rem; /* Texto maior */
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center; /* Centraliza o texto */
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 400px; /* Largura maior para centralizar */
+}
+
+input {
+  width: 100%; /* O input ocupa toda a largura */
+  padding: 15px;
+  border-radius: 25px; /* Bordas arredondadas */
+  border: 1px solid #333; /* Borda mais sutil */
+  outline: none;
+  background-color: #2c2c2c; /* Fundo mais escuro */
+  color: white; /* Texto branco */
+}
+
+input::placeholder {
+  color: #888; /* Placeholder com cor mais clara */
+}
+
+button {
+  width: 100%; /* Botão ocupa toda a largura */
+  padding: 15px;
+  border: none;
+  border-radius: 25px; /* Bordas arredondadas */
+  background-color: #5c5cff; /* Cor primária */
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4242d0; /* Cor mais escura ao passar o mouse */
+}
+
+button:focus {
+  outline: 2px solid #5c5cff; /* Destaque ao foco */
+}

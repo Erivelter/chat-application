@@ -1,0 +1,31 @@
+<h2>Criar Conta</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Campo Nome -->
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input matInput id="name" formControlName="name" placeholder="Digite seu nome de usuário" />
+    @if (form.get('name')?.invalid && form.get('name')?.touched) {
+      <mat-error>{{ errorMessage("name") }}</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Campo Senha -->
+  <mat-form-field appearance="fill">
+    <mat-label>Senha</mat-label>
+    <input matInput id="password" type="password" formControlName="password" placeholder="Digite sua senha" />
+    @if (form.get('password')?.invalid && form.get('password')?.touched) {
+      <mat-error>{{ errorMessage("password") }}</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Botão de Criar Conta -->
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    Criar Conta
+  </button>
+
+  <!-- Link para Login -->
+  <p>
+    <a routerLink="/login">Já tenho uma conta?</a>
+  </p>
+</form>

@@ -1,0 +1,37 @@
+<h2>Login</h2>
+
+<form [formGroup]="form" (ngSubmit)="onLogin()">
+  <!-- Campo de Usuário -->
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input matInput id="name" formControlName="name" placeholder="Digite seu nome de suário" />
+    @if (form.get('name')?.invalid && form.get('name')?.touched) {
+      <mat-error>
+        {{ errorMessage("name") }}
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Senha</mat-label>
+    <input matInput id="password" type="password" formControlName="password" placeholder="Digite sua senha"/>
+    @if (form.get('password')?.invalid && form.get('password')?.touched) {
+      <mat-error>
+        {{ errorMessage("password") }}
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    Entrar
+  </button>
+  @if(message) {
+    <div style="color: red; margin-top: 10px;">
+      {{ message }}
+    </div>
+  }
+
+  <p>
+    <a routerLink="/register">Ainda não tem uma conta? Crie agora</a>
+  </p>
+</form>

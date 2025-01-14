@@ -1,0 +1,21 @@
+<div class="chat-container">
+  <!-- Mensagem de boas-vindas -->
+   @if(isLoggedIn) {
+    <h2 class="welcome-message">
+      Bem-vindo, {{ userName }}!
+    </h2>
+   }
+
+
+  <!-- Input de mensagem e botão de enviar -->
+  <div class="chat-box">
+    <label for="message">Digite sua mensagem</label>
+    <input
+      id="message"
+      [(ngModel)]="message"
+      placeholder="Digite sua mensagem"
+    />
+    <button (click)="sendMessage()">Enviar</button>
+  </div>
+</div>
+

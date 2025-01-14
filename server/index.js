@@ -1,5 +1,5 @@
 //Esse é o arquivo que você deve rodar, entendeu!
-const { app, server } = require('.'); 
+const { app, server } = require('./server'); 
 require('dotenv').config();
 
 const PORT = 4600
