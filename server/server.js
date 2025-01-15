@@ -31,6 +31,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/api/messages', async (req, res) => {
+  try {
+    const messages = await Chat.findAll({
+      where: { sala_id: 1 },  // Filtra pela sala, ou qualquer outra lógica necessária
+      order: [['data', 'ASC']], // Ordena as mensagens pela data (do mais antigo para o mais recente)
+    });
+    res.json(messages);  // Retorna as mensagens ao frontend
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar mensagens' });
+  }
+});
+
 wss.on('connection', function (socket) {
   let currentUser = null; // Variável para armazenar o nome de usuário do cliente
 
