@@ -9,6 +9,11 @@
 
   <!-- Input de mensagem e botão de enviar -->
   <div class="chat-box">
+
+    @for(msg of messages; track msg) {
+      <span>{{"Usuário: " + msg.sender + " = "+ msg.content + msg.timestamp}}</span>
+
+    }
     <label for="message">Digite sua mensagem</label>
     <input
       id="message"
@@ -18,4 +23,5 @@
     <button (click)="sendMessage()">Enviar</button>
   </div>
 </div>
+
 

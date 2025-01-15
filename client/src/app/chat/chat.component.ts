@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import {  FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import {  FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AppMaterialModule } from '../shared/app-material/app-material.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { User } from '../models/user';
-import { AuthService } from '../services/auth.service';
+import { User, Message } from '../models/user';
 import { ChatService } from '../services/chat.service';
 
 @Component({
@@ -16,10 +15,10 @@ import { ChatService } from '../services/chat.service';
 export class ChatComponent {
   userName: string = ''; // Nome do usuário autenticado
   message: string = '';
-  messages: any[] = []; // Lista de mensagens recebidas
+  messages: Message[] = []; // Lista de mensagens recebidas
   isLoggedIn: boolean = false; // Verifica se o usuário está logado
 
-  constructor(private snackBar: MatSnackBar, private router: Router, private authService: AuthService, private chatService: ChatService) {}
+  constructor(private snackBar: MatSnackBar, private router: Router, private chatService: ChatService) {}
 
 
   ngOnInit() {
