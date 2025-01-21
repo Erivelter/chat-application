@@ -49,9 +49,12 @@ wss.on('connection', function (socket) {
   socket.on('message', async function (msg) {
     try {
       const message = JSON.parse(msg.toString('utf-8'));
+      console.log('Mensagem recebida:', message); // Log para verificar o conteúdo
+
 
       // Verifica o tipo de mensagem
       if (message.type === 'join') {
+        
         // Armazena o nome do usuário quando ele entra no chat
         currentUser = message.userName;
         console.log(`${currentUser} entrou no chat`);
@@ -109,7 +112,11 @@ await Chat.create({
           userName: currentUser,
           content: content,
         });
-
+        console.log('Broadcasting message:', {
+          type: 'message',
+          userName: currentUser,
+          content: content,
+        });
         return;
       }
     } catch (err) {

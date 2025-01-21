@@ -14,7 +14,7 @@ import { ChatService } from '../services/chat.service';
 })
 export class ChatComponent {
   userName: string = ''; // Nome do usuário autenticado
-  message: string = '';
+  newMessage: string = '';
   messages: Message[] = []; // Lista de mensagens recebidas
   isLoggedIn: boolean = false; // Verifica se o usuário está logado
 
@@ -30,17 +30,25 @@ export class ChatComponent {
       // Entra no chat e começa a ouvir mensagens
       this.chatService.joinChat(this.userName);
 
-      // Recebe mensagens em tempo real
+      // Carregar histórico de mensagens do banco de dados
       this.chatService.getMessages().subscribe({
-        next: (message) => {
-          this.messages.push(message); // Adiciona mensagem à lista
+        next: (messages) => {
+          this.messages = messages;
         },
-        error: (error) => {
-          console.error('Erro ao receber mensagens:', error);
+        error: (err) => {
+          console.error('Erro ao carregar mensagens:', err);
         }
       });
-    } else {
-      console.log('Usuário não está logado.');
+
+      // Escutar mensagens em tempo real via WebSocket
+      this.chatService.receiveMessages().subscribe({
+        next: (message: Message) => {
+          this.messages.push(message);
+        },
+        error: (err) => {
+          console.error('Erro ao receber mensagens:', err);
+        }
+      });
     }
   }
  // Método chamado ao enviar uma mensagem
@@ -48,9 +56,15 @@ export class ChatComponent {
   if (!this.isLoggedIn) {
     this.openSnackBar(); // Mostra o Snackbar se não estiver logado
   } else {
-    this.chatService.sendMessage(this.message); // Envia mensagem ao backend
-    console.log(`Usuário: ${this.userName}, Mensagem: ${this.message}`);
-    this.message = ''; // Limpa o campo de mensagem
+    const message: Omit<Message, 'id'>= {
+      content: this.newMessage,
+      sender: this.userName, // Substituir pelo nome do usuário autenticado
+      timestamp: new Date()
+    };
+
+    this.chatService.sendMessage(message)
+    console.log(`Usuário: ${this.userName}, Mensagem: ${this.newMessage}`);
+    this.newMessage = ''; // Limpa o campo de mensagem
   }
 }
 

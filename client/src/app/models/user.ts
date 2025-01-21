@@ -10,3 +10,4 @@ export interface Message {
   sender: string; // nooome do usuario que enviou
   timestamp: Date;
 }
+
